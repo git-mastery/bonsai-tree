@@ -36,6 +36,7 @@ if [[ -z $OPEN_PR ]]; then
     CURRENT_BRANCH=$(git branch --show-current)
     echo "Using current branch $CURRENT_BRANCH"
     git push -u origin $CURRENT_BRANCH
+    git push --all origin
     gh pr create \
       --repo git-mastery/$EXERCISE_NAME \
       --title "[$CURRENT_USERNAME] [$EXERCISE_NAME] Submission" \
@@ -44,6 +45,7 @@ if [[ -z $OPEN_PR ]]; then
   else
     echo "Using $HEAD instead"
     git push -u origin $HEAD
+    git push --all origin
     gh pr create \
       --repo git-mastery/$EXERCISE_NAME \
       --title "[$CURRENT_USERNAME] [$EXERCISE_NAME] Submission" \
@@ -56,8 +58,10 @@ else
     CURRENT_BRANCH=$(git branch --show-current)
     echo "Pushing $CURRENT_BRANCH"
     git push -u origin $CURRENT_BRANCH
+    git push --all origin
   else
     echo "Pushing $HEAD"
     git push -u origin $HEAD
+    git push --all origin
   fi
 fi
