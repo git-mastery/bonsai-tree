@@ -24,11 +24,15 @@ fi
 EXERCISE_NAME=${PWD##*/}
 
 # Check if PR exists already
-OPEN_PR=$(gh pr list --repo git-mastery/$EXERCISE_NAME --state "open" --author "@me" --base "submission")
+OPEN_PR=$(gh pr list --repo git-mastery/$EXERCISE_NAME --state "open" --author "@me" --head "submission")
 
 CURRENT_USERNAME=$(gh api user -q ".login")
 
-git checkout submission 2>/dev/null || git checkout -b submission
+if [ ! $(git rev-parse --verify submission 2>/dev/null) ]; then
+  git branch submission 2>/dev/null
+fi
+
+echo "Pushing all changes"
 git push --all origin
 git commit -m "Submission" --allow-empty
 
@@ -39,7 +43,4 @@ if [[ -z $OPEN_PR ]]; then
     --title "[$CURRENT_USERNAME] [$EXERCISE_NAME] Submission" \
     --body "" \
     --head $CURRENT_USERNAME:submission
-else
-  git push --all origin
-  git commit -m "Submission" --allow-empty
 fi
