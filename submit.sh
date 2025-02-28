@@ -24,44 +24,22 @@ fi
 EXERCISE_NAME=${PWD##*/}
 
 # Check if PR exists already
-OPEN_PR=$(gh pr list --repo git-mastery/$EXERCISE_NAME --state "open" --author "@me")
+OPEN_PR=$(gh pr list --repo git-mastery/$EXERCISE_NAME --state "open" --author "@me" --base "submission")
 
 CURRENT_USERNAME=$(gh api user -q ".login")
 
-HEAD=$1
+git checkout submission 2>/dev/null || git checkout -b submission
+git push --all origin
+git commit -m "Submission" --allow-empty
 
 if [[ -z $OPEN_PR ]]; then
   echo "You don't have an open PR for $EXERCISE_NAME yet, creating one on your behalf"
-  if [[ -z $HEAD ]]; then
-    CURRENT_BRANCH=$(git branch --show-current)
-    echo "Using current branch $CURRENT_BRANCH"
-    git push -u origin $CURRENT_BRANCH
-    git push --all origin
-    gh pr create \
-      --repo git-mastery/$EXERCISE_NAME \
-      --title "[$CURRENT_USERNAME] [$EXERCISE_NAME] Submission" \
-      --body "" \
-      --head $CURRENT_USERNAME:$CURRENT_BRANCH
-  else
-    echo "Using $HEAD instead"
-    git push -u origin $HEAD
-    git push --all origin
-    gh pr create \
-      --repo git-mastery/$EXERCISE_NAME \
-      --title "[$CURRENT_USERNAME] [$EXERCISE_NAME] Submission" \
-      --body "" \
-      --head $CURRENT_USERNAME:$HEAD
-  fi
+  gh pr create \
+    --repo git-mastery/$EXERCISE_NAME \
+    --title "[$CURRENT_USERNAME] [$EXERCISE_NAME] Submission" \
+    --body "" \
+    --head $CURRENT_USERNAME:submission
 else
-  # If a PR already exists, we can just push directly
-  if [[ -z $HEAD ]]; then
-    CURRENT_BRANCH=$(git branch --show-current)
-    echo "Pushing $CURRENT_BRANCH"
-    git push -u origin $CURRENT_BRANCH
-    git push --all origin
-  else
-    echo "Pushing $HEAD"
-    git push -u origin $HEAD
-    git push --all origin
-  fi
+  git push --all origin
+  git commit -m "Submission" --allow-empty
 fi
