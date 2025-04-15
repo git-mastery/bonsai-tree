@@ -1,5 +1,12 @@
 # Bonsai tree
 
+You are an aspiring botanist and you are starting to take notes of the various botany facts related to [bonsai trees]()
+
+## Learning outcomes
+
+- [ ] Create branches in a repository
+- [ ] Navigate between branches in a repository
+
 ## Goal
 
 Create a new file titled `dangers-to-bonsais.txt` on the `main` branch with the following text:
